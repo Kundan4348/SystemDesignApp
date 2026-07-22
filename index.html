@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a0f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SysBreach">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <title>SysBreach | System Design Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="matrix-bg"></canvas>
+
+    <div id="app">
+        <!-- Splash Screen -->
+        <div id="splash-screen" class="screen active">
+            <div class="splash-content">
+                <div class="glitch-text" data-text="SYS_BREACH">SYS_BREACH</div>
+                <p class="splash-subtitle">// System Design Academy</p>
+                <div class="loading-bar">
+                    <div class="loading-fill"></div>
+                </div>
+                <p class="loading-text">Initializing neural interface...</p>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" class="screen">
+            <header class="top-bar">
+                <div class="user-rank">
+                    <i class="fas fa-skull-crossbones rank-icon"></i>
+                    <span id="user-rank-text">SCRIPT_KIDDIE</span>
+                </div>
+                <div class="streak-counter">
+                    <i class="fas fa-fire streak-icon"></i>
+                    <span id="streak-count">0</span>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="xp-section">
+                    <div class="xp-bar-container">
+                        <div class="xp-bar-bg">
+                            <div class="xp-bar-fill" id="xp-fill"></div>
+                        </div>
+                        <div class="xp-text">
+                            <span id="xp-current">0</span> / <span id="xp-needed">100</span> XP
+                        </div>
+                    </div>
+                    <div class="level-badge">LVL <span id="user-level">1</span></div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-server"></i>
+                        <span class="stat-value" id="systems-breached">0</span>
+                        <span class="stat-label">SYSTEMS BREACHED</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-bolt"></i>
+                        <span class="stat-value" id="quizzes-passed">0</span>
+                        <span class="stat-label">EXPLOITS RUN</span>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-check"></i>
+                        <span class="stat-value" id="days-completed">0</span>
+                        <span class="stat-label">DAYS ACTIVE</span>
+                    </div>
+                </div>
+
+                <div class="daily-mission">
+                    <h3><i class="fas fa-crosshairs"></i> DAILY MISSION</h3>
+                    <div id="daily-mission-content"></div>
+                </div>
+
+                <div class="week-selector">
+                    <h3><i class="fas fa-network-wired"></i> SELECT TARGET SYSTEM</h3>
+                    <div class="weeks-grid" id="weeks-grid"></div>
+                </div>
+            </div>
+
+            <nav class="bottom-nav">
+                <button class="nav-btn active" data-page="dashboard">
+                    <i class="fas fa-terminal"></i>
+                    <span>HQ</span>
+                </button>
+                <button class="nav-btn" data-page="lessons">
+                    <i class="fas fa-book-skull"></i>
+                    <span>LEARN</span>
+                </button>
+                <button class="nav-btn" data-page="quiz">
+                    <i class="fas fa-crosshairs"></i>
+                    <span>HACK</span>
+                </button>
+                <button class="nav-btn" data-page="profile">
+                    <i class="fas fa-user-secret"></i>
+                    <span>PROFILE</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Lessons Screen -->
+        <div id="lessons" class="screen">
+            <header class="page-header">
+                <button class="back-btn" onclick="showScreen('dashboard')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h2 id="lesson-week-title">WEEK 1</h2>
+                <div class="week-progress">
+                    <span id="lesson-progress-text">0/7</span>
+                </div>
+            </header>
+            <div class="lessons-list" id="lessons-list"></div>
+            <nav class="bottom-nav">
+                <button class="nav-btn" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
+                <button class="nav-btn active" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
+                <button class="nav-btn" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
+            </nav>
+        </div>
+
+        <!-- Lesson Detail -->
+        <div id="lesson-detail" class="screen">
+            <header class="page-header">
+                <button class="back-btn" onclick="goBackFromLesson()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h2 id="lesson-title">LESSON</h2>
+                <button class="complete-btn" id="complete-lesson-btn" onclick="completeLesson()">
+                    <i class="fas fa-check-circle"></i>
+                </button>
+            </header>
+            <div class="lesson-content" id="lesson-content"></div>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz" class="screen">
+            <header class="page-header">
+                <button class="back-btn" onclick="showScreen('dashboard')">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h2>EXPLOIT LAB</h2>
+            </header>
+            <div class="quiz-selector" id="quiz-selector"></div>
+            <nav class="bottom-nav">
+                <button class="nav-btn" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
+                <button class="nav-btn" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
+                <button class="nav-btn active" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
+            </nav>
+        </div>
+
+        <!-- Quiz Active -->
+        <div id="quiz-active" class="screen">
+            <header class="quiz-header">
+                <button class="back-btn" onclick="exitQuiz()"><i class="fas fa-times"></i></button>
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+                </div>
+                <span class="quiz-question-count" id="quiz-q-count">1/5</span>
+            </header>
+            <div class="quiz-body" id="quiz-body"></div>
+        </div>
+
+        <!-- Quiz Result -->
+        <div id="quiz-result" class="screen">
+            <div class="result-content">
+                <div class="result-icon" id="result-icon"></div>
+                <h2 id="result-title"></h2>
+                <p id="result-subtitle"></p>
+                <div class="result-stats">
+                    <div class="result-stat">
+                        <span class="result-stat-value" id="result-correct">0</span>
+                        <span class="result-stat-label">CORRECT</span>
+                    </div>
+                    <div class="result-stat">
+                        <span class="result-stat-value" id="result-xp">0</span>
+                        <span class="result-stat-label">XP EARNED</span>
+                    </div>
+                </div>
+                <button class="neon-btn" onclick="showScreen('quiz')">RETURN TO LAB</button>
+                <button class="neon-btn secondary" onclick="retryQuiz()">RETRY EXPLOIT</button>
+            </div>
+        </div>
+
+        <!-- Profile Screen -->
+        <div id="profile" class="screen">
+            <header class="page-header">
+                <h2>HACKER PROFILE</h2>
+            </header>
+            <div class="profile-content" id="profile-content"></div>
+            <nav class="bottom-nav">
+                <button class="nav-btn" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
+                <button class="nav-btn" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
+                <button class="nav-btn" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn active" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
+            </nav>
+        </div>
+
+        <!-- Breach Animation Overlay -->
+        <div id="breach-overlay" class="breach-overlay hidden">
+            <div class="breach-content">
+                <div class="breach-icon"><i class="fas fa-unlock-alt"></i></div>
+                <h2 class="breach-text">SYSTEM BREACHED</h2>
+                <p class="breach-topic" id="breach-topic-name"></p>
+                <div class="breach-xp">+<span id="breach-xp-earned">50</span> XP</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="visuals.js"></script>
+    <script src="content.js"></script>
+    <script src="content-extended.js"></script>
+    <script src="content-extended2.js"></script>
+    <script src="quizzes.js"></script>
+    <script src="quizzes-extended.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
