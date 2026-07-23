@@ -448,11 +448,11 @@ function renderProfile() {
                 ${renderAchievement('fa-bolt', '7-Day Streak', state.streak >= 7)}
                 ${renderAchievement('fa-server', '5 Systems', state.completedLessons.length >= 5)}
                 ${renderAchievement('fa-database', '15 Systems', state.completedLessons.length >= 15)}
-                ${renderAchievement('fa-network-wired', 'All 35', state.completedLessons.length >= 35)}
+                ${renderAchievement('fa-network-wired', 'HLD Master (35)', state.completedLessons.length >= 35)}
+                ${renderAchievement('fa-cube', 'LLD Master (50)', state.completedLessons.length >= 50)}
                 ${renderAchievement('fa-crosshairs', 'Quiz Ace', Object.values(state.quizScores).some(s => s >= 9))}
-                ${renderAchievement('fa-trophy', 'All Quizzes', Object.keys(state.quizScores).length >= 5)}
+                ${renderAchievement('fa-trophy', 'All Quizzes', Object.keys(state.quizScores).length >= 10)}
                 ${renderAchievement('fa-crown', 'Architect', state.level >= 25)}
-                ${renderAchievement('fa-star', 'Level 10', state.level >= 10)}
             </div>
         </div>
 
