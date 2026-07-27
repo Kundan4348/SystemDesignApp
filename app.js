@@ -42,6 +42,8 @@ function init() {
             } else if (page === 'quiz') {
                 showScreen('quiz');
                 renderQuizSelector();
+            } else if (page === 'lab') {
+                showScreen('lab');
             } else if (page === 'profile') {
                 showScreen('profile');
                 renderProfile();
@@ -520,6 +522,41 @@ function initMatrixRain() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
     });
+}
+
+// ============ LAB MODULE HANDLER ============
+function openLabModule(type, key) {
+    const container = document.getElementById('lab-module-content');
+    const title = document.getElementById('lab-module-title');
+
+    if (type === 'anim') {
+        const config = ANIM_CONFIGS[key];
+        title.textContent = 'ANIMATED FLOW';
+        container.innerHTML = '';
+        new AnimatedDiagram(container, config);
+    } else if (type === 'builder') {
+        const config = BUILDER_CONFIGS[key];
+        title.textContent = 'ARCHITECTURE BUILDER';
+        container.innerHTML = '';
+        new ArchBuilder(container, config);
+    } else if (type === 'code') {
+        const config = CODE_CHALLENGES[key];
+        title.textContent = 'CODE CHALLENGE';
+        container.innerHTML = '';
+        new CodeChallenge(container, config);
+    } else if (type === 'mock') {
+        const config = MOCK_CONFIGS[key];
+        title.textContent = 'MOCK INTERVIEW';
+        container.innerHTML = '';
+        new MockInterview(container, config);
+    } else if (type === 'flash') {
+        const config = FLASHCARD_DECKS[key];
+        title.textContent = 'FLASHCARDS';
+        container.innerHTML = '';
+        new FlashcardDeck(container, config);
+    }
+
+    showScreen('lab-module');
 }
 
 // ============ WALKTHROUGH HANDLER ============

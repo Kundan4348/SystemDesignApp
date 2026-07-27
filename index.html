@@ -15,6 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="interactive.css">
 </head>
 <body>
     <canvas id="matrix-bg"></canvas>
@@ -99,6 +100,10 @@
                 <button class="nav-btn" data-page="quiz">
                     <i class="fas fa-crosshairs"></i>
                     <span>HACK</span>
+                </button>
+                <button class="nav-btn" data-page="lab">
+                    <i class="fas fa-flask"></i>
+                    <span>LAB</span>
                 </button>
                 <button class="nav-btn" data-page="profile">
                     <i class="fas fa-user-secret"></i>
@@ -191,6 +196,82 @@
             </div>
         </div>
 
+        <!-- Lab Screen (Interactive) -->
+        <div id="lab" class="screen">
+            <header class="page-header">
+                <h2><i class="fas fa-flask"></i> HACK LAB</h2>
+            </header>
+            <div class="lab-content" id="lab-content">
+                <div class="lab-section">
+                    <h3><i class="fas fa-play-circle" style="color:var(--neon-cyan)"></i> ANIMATED FLOWS</h3>
+                    <div class="lab-card" onclick="openLabModule('anim', 'cacheFlow')">
+                        <i class="fas fa-bolt"></i>
+                        <div><h4>Cache Hit/Miss Flow</h4><p>Watch data travel through cache layers</p></div>
+                    </div>
+                    <div class="lab-card" onclick="openLabModule('anim', 'requestFlow')">
+                        <i class="fas fa-server"></i>
+                        <div><h4>Full Request Lifecycle</h4><p>LB → Server → Cache → DB animated</p></div>
+                    </div>
+                </div>
+                <div class="lab-section">
+                    <h3><i class="fas fa-drafting-compass" style="color:var(--neon-purple)"></i> ARCHITECTURE BUILDER</h3>
+                    <div class="lab-card" onclick="openLabModule('builder', 'urlShortener')">
+                        <i class="fas fa-link"></i>
+                        <div><h4>Build: URL Shortener</h4><p>Drag components into correct order</p></div>
+                    </div>
+                    <div class="lab-card" onclick="openLabModule('builder', 'chatSystem')">
+                        <i class="fas fa-comments"></i>
+                        <div><h4>Build: Chat System</h4><p>Construct the message flow</p></div>
+                    </div>
+                </div>
+                <div class="lab-section">
+                    <h3><i class="fas fa-code" style="color:var(--neon-green)"></i> CODE CHALLENGES</h3>
+                    <div class="lab-card" onclick="openLabModule('code', 'lruCache')">
+                        <i class="fas fa-memory"></i>
+                        <div><h4>Implement LRU Cache</h4><p>O(1) get and put with eviction</p></div>
+                    </div>
+                    <div class="lab-card" onclick="openLabModule('code', 'tokenBucket')">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <div><h4>Token Bucket Rate Limiter</h4><p>Lazy refill + capacity limit</p></div>
+                    </div>
+                </div>
+                <div class="lab-section">
+                    <h3><i class="fas fa-user-tie" style="color:var(--neon-orange)"></i> MOCK INTERVIEWS</h3>
+                    <div class="lab-card" onclick="openLabModule('mock', 'twitterFeed')">
+                        <i class="fas fa-stream"></i>
+                        <div><h4>Design Twitter Feed</h4><p>45-min timed simulation with scoring</p></div>
+                    </div>
+                </div>
+                <div class="lab-section">
+                    <h3><i class="fas fa-clone" style="color:var(--neon-yellow)"></i> FLASHCARDS</h3>
+                    <div class="lab-card" onclick="openLabModule('flash', 'hldConcepts')">
+                        <i class="fas fa-server"></i>
+                        <div><h4>HLD Concepts</h4><p>12 cards — spaced repetition</p></div>
+                    </div>
+                    <div class="lab-card" onclick="openLabModule('flash', 'lldPatterns')">
+                        <i class="fas fa-cubes"></i>
+                        <div><h4>LLD Patterns</h4><p>12 cards — SOLID + design patterns</p></div>
+                    </div>
+                </div>
+            </div>
+            <nav class="bottom-nav">
+                <button class="nav-btn" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
+                <button class="nav-btn" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
+                <button class="nav-btn" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn active" data-page="lab"><i class="fas fa-flask"></i><span>LAB</span></button>
+                <button class="nav-btn" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
+            </nav>
+        </div>
+
+        <!-- Lab Module View -->
+        <div id="lab-module" class="screen">
+            <header class="page-header">
+                <button class="back-btn" onclick="showScreen('lab')"><i class="fas fa-chevron-left"></i></button>
+                <h2 id="lab-module-title">MODULE</h2>
+            </header>
+            <div class="lab-module-content" id="lab-module-content"></div>
+        </div>
+
         <!-- Profile Screen -->
         <div id="profile" class="screen">
             <header class="page-header">
@@ -225,6 +306,8 @@
     <script src="quizzes.js"></script>
     <script src="quizzes-extended.js"></script>
     <script src="quizzes-lld.js"></script>
+    <script src="interactive.js"></script>
+    <script src="interactive-data.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
