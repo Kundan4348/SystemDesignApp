@@ -1,0 +1,263 @@
+/* ============ REVISION CARD (Dashboard) ============ */
+.revision-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.revision-card.due {
+    background: rgba(255, 102, 0, 0.08);
+    border: 1px solid var(--neon-orange);
+    animation: revision-pulse 2s infinite;
+}
+
+@keyframes revision-pulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(255, 102, 0, 0); }
+    50% { box-shadow: 0 0 20px rgba(255, 102, 0, 0.25); }
+}
+
+.revision-card.due > i {
+    font-size: 1.5rem;
+    color: var(--neon-orange);
+    animation: spin-slow 4s linear infinite;
+}
+
+@keyframes spin-slow {
+    to { transform: rotate(360deg); }
+}
+
+.revision-card.all-clear {
+    background: rgba(0, 255, 65, 0.04);
+    border: 1px solid var(--border-color);
+    cursor: default;
+}
+
+.revision-card.all-clear > i {
+    font-size: 1.5rem;
+    color: var(--neon-green);
+}
+
+.revision-card h4 {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--text-primary);
+}
+
+.revision-card.due h4 { color: var(--neon-orange); }
+.revision-card.all-clear h4 { color: var(--neon-green); }
+
+.revision-card p {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-top: 0.2rem;
+}
+
+.revision-badge {
+    position: absolute;
+    right: 1rem;
+    background: var(--neon-orange);
+    color: var(--bg-primary);
+    font-weight: 700;
+    font-size: 0.8rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============ REVISION SESSION ============ */
+.revision-session-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+.revision-stage {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.stage-label {
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    color: var(--neon-purple);
+    letter-spacing: 2px;
+}
+
+.stage-dots {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.stage-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+}
+
+.stage-dot.done {
+    background: var(--neon-green);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 6px rgba(0, 255, 65, 0.5);
+}
+
+.stage-dot.current {
+    border-color: var(--neon-orange);
+    animation: blink 1.5s infinite;
+}
+
+.revision-item h3 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.revision-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+}
+
+.revision-recall-prompt {
+    background: rgba(255, 208, 0, 0.05);
+    border: 1px solid var(--neon-yellow);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.revision-recall-prompt h4 {
+    font-size: 0.75rem;
+    color: var(--neon-yellow);
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.revision-recall-prompt p {
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.revision-recall-prompt ul {
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.revision-recall-prompt li {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.35rem;
+}
+
+.revision-takeaways {
+    animation: fadeIn 0.4s ease;
+}
+
+.revision-verdict {
+    margin-top: 1.25rem;
+    text-align: center;
+}
+
+.revision-verdict p {
+    font-size: 0.8rem;
+    color: var(--text-primary);
+    margin-bottom: 0.75rem;
+}
+
+.revision-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.revision-complete {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.revision-complete i {
+    font-size: 3.5rem;
+    color: var(--neon-green);
+    filter: drop-shadow(0 0 20px var(--neon-green));
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.revision-complete h2 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--neon-green);
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.revision-complete p {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* ============ IN-LESSON EXPERIENCE ============ */
+.lesson-progress-track {
+    position: sticky;
+    top: 0;
+    height: 4px;
+    background: var(--bg-card);
+    border-radius: 2px;
+    margin-bottom: 1rem;
+    z-index: 10;
+}
+
+.lesson-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.4);
+    transition: width 0.4s ease;
+}
+
+.lesson-section-label {
+    font-family: var(--font-display);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+.lesson-section-body {
+    animation: sectionSlide 0.35s ease;
+}
+
+@keyframes sectionSlide {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.lesson-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.lesson-reading-time {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+}

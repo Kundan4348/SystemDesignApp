@@ -28,6 +28,9 @@ function init() {
     updateStreak();
     initMatrixRain();
 
+    // Backfill: lessons completed before revision system existed
+    state.completedLessons.forEach(day => RevisionEngine.addLesson(day));
+
     setTimeout(() => {
         showScreen('dashboard');
         renderDashboard();
@@ -131,6 +134,7 @@ function renderDashboard() {
 
     renderDailyMission();
     renderWeeksGrid();
+    renderRevisionCard();
 }
 
 function updateXPDisplay() {
@@ -231,26 +235,9 @@ function renderLessonsList(weekId) {
 let currentLessonDay = null;
 
 function openLesson(weekId, dayNum) {
-    const week = WEEKS.find(w => w.id === weekId);
-    const lesson = week.days.find(d => d.day === dayNum);
-    if (!lesson) return;
-
     currentLessonDay = dayNum;
     currentWeekId = weekId;
-
-    document.getElementById('lesson-title').textContent = `DAY ${dayNum}`;
-    document.getElementById('lesson-content').innerHTML = lesson.content;
-
-    const btn = document.getElementById('complete-lesson-btn');
-    if (state.completedLessons.includes(dayNum)) {
-        btn.style.color = 'var(--neon-green)';
-        btn.innerHTML = '<i class="fas fa-check-circle"></i>';
-    } else {
-        btn.style.color = 'var(--text-dim)';
-        btn.innerHTML = '<i class="far fa-circle"></i>';
-    }
-
-    showScreen('lesson-detail');
+    LessonExperience.open(weekId, dayNum);
 }
 
 function goBackFromLesson() {
@@ -259,21 +246,8 @@ function goBackFromLesson() {
 }
 
 function completeLesson() {
-    if (currentLessonDay === null) return;
-    if (state.completedLessons.includes(currentLessonDay)) return;
-
-    const week = WEEKS.find(w => w.id === currentWeekId);
-    const lesson = week.days.find(d => d.day === currentLessonDay);
-
-    state.completedLessons.push(currentLessonDay);
-    saveState();
-    addXP(lesson.xp);
-
-    showBreachAnimation(lesson.title, lesson.xp);
-
-    const btn = document.getElementById('complete-lesson-btn');
-    btn.style.color = 'var(--neon-green)';
-    btn.innerHTML = '<i class="fas fa-check-circle"></i>';
+    // Legacy entry point — completion now flows through LessonExperience.finish()
+    LessonExperience.finish();
 }
 
 // ============ BREACH ANIMATION ============

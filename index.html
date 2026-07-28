@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="interactive.css">
+    <link rel="stylesheet" href="revision.css">
 </head>
 <body>
     <canvas id="matrix-bg"></canvas>
@@ -76,6 +77,8 @@
                         <span class="stat-label">DAYS ACTIVE</span>
                     </div>
                 </div>
+
+                <div id="revision-card-container"></div>
 
                 <div class="daily-mission">
                     <h3><i class="fas fa-crosshairs"></i> DAILY MISSION</h3>
@@ -139,11 +142,21 @@
                     <i class="fas fa-chevron-left"></i>
                 </button>
                 <h2 id="lesson-title">LESSON</h2>
-                <button class="complete-btn" id="complete-lesson-btn" onclick="completeLesson()">
-                    <i class="fas fa-check-circle"></i>
-                </button>
+                <span class="lesson-reading-time" id="lesson-reading-time"></span>
             </header>
             <div class="lesson-content" id="lesson-content"></div>
+        </div>
+
+        <!-- Revision Session -->
+        <div id="revision-session" class="screen">
+            <header class="page-header">
+                <button class="back-btn" onclick="showScreen('dashboard'); renderDashboard();">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <h2><i class="fas fa-rotate"></i> REVISION</h2>
+                <span class="week-progress" id="revision-progress-text"></span>
+            </header>
+            <div class="revision-session-content" id="revision-session-content"></div>
         </div>
 
         <!-- Quiz Screen -->
@@ -309,6 +322,8 @@
     <script src="quizzes-lld.js"></script>
     <script src="interactive.js"></script>
     <script src="interactive-data.js"></script>
+    <script src="revision.js"></script>
+    <script src="lesson-experience.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,17 +1,24 @@
-const CACHE_NAME = 'sysbreach-v3';
+const CACHE_NAME = 'sysbreach-v4';
 const ASSETS = [
     '/',
     '/index.html',
     '/styles.css',
+    '/interactive.css',
+    '/revision.css',
     '/visuals.js',
     '/content.js',
     '/content-extended.js',
     '/content-extended2.js',
     '/content-lld1.js',
     '/content-lld2.js',
+    '/content-approach.js',
     '/quizzes.js',
     '/quizzes-extended.js',
     '/quizzes-lld.js',
+    '/interactive.js',
+    '/interactive-data.js',
+    '/revision.js',
+    '/lesson-experience.js',
     '/app.js',
     '/manifest.json'
 ];
