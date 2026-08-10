@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="interactive.css">
     <link rel="stylesheet" href="revision.css">
+    <link rel="stylesheet" href="tutor.css">
 </head>
 <body>
     <canvas id="matrix-bg"></canvas>
@@ -92,26 +93,12 @@
             </div>
 
             <nav class="bottom-nav">
-                <button class="nav-btn active" data-page="dashboard">
-                    <i class="fas fa-terminal"></i>
-                    <span>HQ</span>
-                </button>
-                <button class="nav-btn" data-page="lessons">
-                    <i class="fas fa-book-skull"></i>
-                    <span>LEARN</span>
-                </button>
-                <button class="nav-btn" data-page="quiz">
-                    <i class="fas fa-crosshairs"></i>
-                    <span>HACK</span>
-                </button>
-                <button class="nav-btn" data-page="lab">
-                    <i class="fas fa-flask"></i>
-                    <span>LAB</span>
-                </button>
-                <button class="nav-btn" data-page="profile">
-                    <i class="fas fa-user-secret"></i>
-                    <span>PROFILE</span>
-                </button>
+                <button class="nav-btn active" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
+                <button class="nav-btn" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
+                <button class="nav-btn" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn" data-page="lab"><i class="fas fa-flask"></i><span>LAB</span></button>
+                <button class="nav-btn" data-page="tutor"><i class="fas fa-robot"></i><span>AI</span></button>
+                <button class="nav-btn" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
             </nav>
         </div>
 
@@ -131,6 +118,8 @@
                 <button class="nav-btn" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
                 <button class="nav-btn active" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
                 <button class="nav-btn" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn" data-page="lab"><i class="fas fa-flask"></i><span>LAB</span></button>
+                <button class="nav-btn" data-page="tutor"><i class="fas fa-robot"></i><span>AI</span></button>
                 <button class="nav-btn" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
             </nav>
         </div>
@@ -172,6 +161,8 @@
                 <button class="nav-btn" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
                 <button class="nav-btn" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
                 <button class="nav-btn active" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn" data-page="lab"><i class="fas fa-flask"></i><span>LAB</span></button>
+                <button class="nav-btn" data-page="tutor"><i class="fas fa-robot"></i><span>AI</span></button>
                 <button class="nav-btn" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
             </nav>
         </div>
@@ -272,6 +263,23 @@
                 <button class="nav-btn" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
                 <button class="nav-btn" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
                 <button class="nav-btn active" data-page="lab"><i class="fas fa-flask"></i><span>LAB</span></button>
+                <button class="nav-btn" data-page="tutor"><i class="fas fa-robot"></i><span>AI</span></button>
+                <button class="nav-btn" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
+            </nav>
+        </div>
+
+        <!-- AI Tutor Screen -->
+        <div id="tutor" class="screen">
+            <header class="page-header">
+                <h2><i class="fas fa-robot"></i> BREACH_AI</h2>
+            </header>
+            <div class="tutor-content" id="tutor-content"></div>
+            <nav class="bottom-nav">
+                <button class="nav-btn" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
+                <button class="nav-btn" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
+                <button class="nav-btn" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn" data-page="lab"><i class="fas fa-flask"></i><span>LAB</span></button>
+                <button class="nav-btn active" data-page="tutor"><i class="fas fa-robot"></i><span>AI</span></button>
                 <button class="nav-btn" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
             </nav>
         </div>
@@ -295,6 +303,8 @@
                 <button class="nav-btn" data-page="dashboard"><i class="fas fa-terminal"></i><span>HQ</span></button>
                 <button class="nav-btn" data-page="lessons"><i class="fas fa-book-skull"></i><span>LEARN</span></button>
                 <button class="nav-btn" data-page="quiz"><i class="fas fa-crosshairs"></i><span>HACK</span></button>
+                <button class="nav-btn" data-page="lab"><i class="fas fa-flask"></i><span>LAB</span></button>
+                <button class="nav-btn" data-page="tutor"><i class="fas fa-robot"></i><span>AI</span></button>
                 <button class="nav-btn active" data-page="profile"><i class="fas fa-user-secret"></i><span>PROFILE</span></button>
             </nav>
         </div>
@@ -324,6 +334,7 @@
     <script src="interactive-data.js"></script>
     <script src="revision.js"></script>
     <script src="lesson-experience.js"></script>
+    <script src="tutor.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

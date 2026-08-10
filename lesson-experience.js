@@ -70,6 +70,9 @@ const LessonExperience = {
             </div>
             <div class="lesson-section-label">SECTION ${idx + 1} OF ${total}</div>
             <div class="lesson-section-body">${sectionHtml}</div>
+            <button class="ask-ai-btn" onclick="openTutorWithContext(${this.dayNum})">
+                <i class="fas fa-robot"></i> ASK BREACH_AI ABOUT THIS TOPIC
+            </button>
             <div class="lesson-nav-row">
                 ${!isFirst ? `<button class="neon-btn secondary" onclick="LessonExperience.prev()">← BACK</button>` : '<span></span>'}
                 ${!isLast

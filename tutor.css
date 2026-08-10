@@ -1,0 +1,300 @@
+/* ============ BREACH_AI TUTOR ============ */
+.tutor-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 4.5rem;
+}
+
+/* ---- Key setup ---- */
+.tutor-setup {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.tutor-setup-card {
+    max-width: 420px;
+    margin: 1rem auto;
+    background: var(--bg-card);
+    border: 1px solid var(--neon-purple);
+    border-radius: 16px;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.tutor-setup-icon {
+    font-size: 2.5rem;
+    color: var(--neon-purple);
+    filter: drop-shadow(0 0 15px var(--neon-purple));
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+.tutor-setup-card h3 {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--neon-purple);
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+}
+
+.tutor-setup-card > p {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+}
+
+.tutor-setup-card label {
+    display: block;
+    text-align: left;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
+    margin: 0.75rem 0 0.3rem;
+    text-transform: uppercase;
+}
+
+.tutor-setup-card input,
+.tutor-setup-card select {
+    width: 100%;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.7rem 0.9rem;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    outline: none;
+    margin-bottom: 0.5rem;
+}
+
+.tutor-setup-card input:focus,
+.tutor-setup-card select:focus {
+    border-color: var(--neon-purple);
+}
+
+.tutor-setup-card .neon-btn {
+    width: 100%;
+    margin: 0.75rem 0 0;
+}
+
+.tutor-setup-notes {
+    margin-top: 1.25rem;
+    text-align: left;
+}
+
+.tutor-setup-notes p {
+    font-size: 0.68rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+}
+
+.tutor-setup-notes i {
+    color: var(--neon-cyan);
+    margin-right: 0.35rem;
+}
+
+/* ---- Chat ---- */
+.tutor-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.tutor-context-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+}
+
+#tutor-context-select {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.45rem 0.6rem;
+    color: var(--neon-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    outline: none;
+    max-width: 100%;
+}
+
+.tutor-icon-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    width: 34px;
+    height: 34px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.tutor-icon-btn:hover {
+    color: var(--neon-cyan);
+    border-color: var(--neon-cyan);
+}
+
+.tutor-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tutor-bubble {
+    display: flex;
+    animation: fadeIn 0.25s ease;
+}
+
+.tutor-bubble.user {
+    justify-content: flex-end;
+}
+
+.tutor-bubble-inner {
+    max-width: 88%;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    word-wrap: break-word;
+}
+
+.tutor-bubble.user .tutor-bubble-inner {
+    background: rgba(0, 240, 255, 0.08);
+    border: 1px solid var(--neon-cyan);
+    border-bottom-right-radius: 4px;
+}
+
+.tutor-bubble.assistant .tutor-bubble-inner {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-bottom-left-radius: 4px;
+}
+
+.tutor-bubble-inner strong { color: var(--neon-green); }
+.tutor-bubble-inner em { color: var(--neon-yellow); font-style: italic; }
+.tutor-bubble-inner code {
+    background: var(--bg-primary);
+    color: var(--neon-green);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.76rem;
+}
+
+.tutor-h {
+    display: block;
+    color: var(--neon-cyan) !important;
+    margin-top: 0.4rem;
+}
+
+.tutor-li {
+    display: block;
+    padding-left: 0.75rem;
+}
+
+.tutor-code {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    overflow-x: auto;
+    font-size: 0.72rem;
+    line-height: 1.55;
+    color: var(--neon-green);
+    white-space: pre;
+}
+
+.tutor-typing {
+    color: var(--neon-green);
+    animation: blink 0.8s infinite;
+}
+
+.tutor-error {
+    color: var(--error);
+    font-size: 0.78rem;
+}
+
+/* ---- Input row ---- */
+.tutor-input-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+}
+
+#tutor-input {
+    flex: 1;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.7rem 0.9rem;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    resize: none;
+    outline: none;
+    max-height: 120px;
+    line-height: 1.4;
+}
+
+#tutor-input:focus {
+    border-color: var(--neon-purple);
+}
+
+.tutor-send-btn {
+    background: rgba(191, 0, 255, 0.12);
+    border: 1px solid var(--neon-purple);
+    border-radius: 12px;
+    color: var(--neon-purple);
+    width: 42px;
+    height: 42px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.tutor-send-btn:hover {
+    box-shadow: 0 0 12px rgba(191, 0, 255, 0.3);
+}
+
+.tutor-send-btn:active {
+    transform: scale(0.92);
+}
+
+/* ---- Ask AI button in lessons ---- */
+.ask-ai-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(191, 0, 255, 0.1);
+    border: 1px solid var(--neon-purple);
+    border-radius: 20px;
+    color: var(--neon-purple);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 1rem 0 0.25rem;
+}
+
+.ask-ai-btn:hover {
+    box-shadow: 0 0 10px rgba(191, 0, 255, 0.3);
+}

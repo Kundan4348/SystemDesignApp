@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sysbreach-v4';
+const CACHE_NAME = 'sysbreach-v5';
 const ASSETS = [
     '/',
     '/index.html',
@@ -19,6 +19,8 @@ const ASSETS = [
     '/interactive-data.js',
     '/revision.js',
     '/lesson-experience.js',
+    '/tutor.js',
+    '/tutor.css',
     '/app.js',
     '/manifest.json'
 ];

@@ -47,6 +47,9 @@ function init() {
                 renderQuizSelector();
             } else if (page === 'lab') {
                 showScreen('lab');
+            } else if (page === 'tutor') {
+                showScreen('tutor');
+                TUTOR.init();
             } else if (page === 'profile') {
                 showScreen('profile');
                 renderProfile();
