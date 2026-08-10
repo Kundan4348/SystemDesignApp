@@ -1,11 +1,11 @@
-// ============ BREACH_AI — In-app AI Tutor ============
-// Calls the Claude API directly from the browser using the user's own API key.
+// ============ BREACH_AI — In-app AI Tutor (Google Gemini, free tier) ============
+// Calls the Gemini API directly from the browser using the user's own free API key.
 // Context: full curriculum outline always + selected lesson's full text on demand.
 
 const TUTOR = {
-    apiKey: localStorage.getItem('sysbreach_api_key') || '',
-    model: localStorage.getItem('sysbreach_ai_model') || 'claude-opus-4-8',
-    messages: [],          // conversation history [{role, content}]
+    apiKey: localStorage.getItem('sysbreach_gemini_key') || '',
+    model: localStorage.getItem('sysbreach_ai_model') || 'gemini-2.0-flash',
+    messages: [],          // conversation history [{role:'user'|'assistant', content}]
     contextDay: null,      // day number whose lesson text is loaded as context
     busy: false,
 
@@ -52,19 +52,20 @@ const TUTOR = {
             <div class="tutor-setup-card">
                 <i class="fas fa-robot tutor-setup-icon"></i>
                 <h3>ACTIVATE BREACH_AI</h3>
-                <p>Your personal AI tutor, powered by Claude. It knows the full curriculum and answers any doubt on any topic.</p>
-                <label>Anthropic API Key</label>
-                <input type="password" id="tutor-api-key" placeholder="sk-ant-..." value="${this.apiKey}">
+                <p>Your personal AI tutor, powered by Google Gemini. It knows the full curriculum and answers any doubt on any topic. The API key is <strong>100% free</strong> &mdash; no billing or credit card.</p>
+                <label>Gemini API Key</label>
+                <input type="password" id="tutor-api-key" placeholder="AIza..." value="${this.apiKey}">
                 <label>Model</label>
                 <select id="tutor-model">
-                    <option value="claude-opus-4-8" ${this.model === 'claude-opus-4-8' ? 'selected' : ''}>Claude Opus 4.8 — best answers</option>
-                    <option value="claude-haiku-4-5" ${this.model === 'claude-haiku-4-5' ? 'selected' : ''}>Claude Haiku 4.5 — cheaper, faster</option>
+                    <option value="gemini-2.0-flash" ${this.model === 'gemini-2.0-flash' ? 'selected' : ''}>Gemini 2.0 Flash — recommended</option>
+                    <option value="gemini-2.5-flash" ${this.model === 'gemini-2.5-flash' ? 'selected' : ''}>Gemini 2.5 Flash — smarter</option>
+                    <option value="gemini-1.5-flash" ${this.model === 'gemini-1.5-flash' ? 'selected' : ''}>Gemini 1.5 Flash — fallback</option>
                 </select>
                 <button class="neon-btn" onclick="TUTOR.saveKey()">CONNECT</button>
                 ${this.apiKey ? '<button class="neon-btn secondary" onclick="TUTOR.showChat()">BACK TO CHAT</button>' : ''}
                 <div class="tutor-setup-notes">
-                    <p><i class="fas fa-key"></i> Get a key at <strong>console.anthropic.com</strong> → API Keys. Usage is billed to your account per token.</p>
-                    <p><i class="fas fa-lock"></i> The key is stored only in this browser (localStorage) and sent only to api.anthropic.com. Never share screenshots of it.</p>
+                    <p><i class="fas fa-gift"></i> Get a <strong>free</strong> key at <strong>aistudio.google.com/apikey</strong> &rarr; "Create API key". No credit card needed. Free tier allows generous daily usage.</p>
+                    <p><i class="fas fa-lock"></i> The key is stored only in this browser (localStorage) and sent only to Google's API. Never share screenshots of it.</p>
                 </div>
             </div>
         `;
@@ -73,13 +74,13 @@ const TUTOR = {
     saveKey() {
         const key = document.getElementById('tutor-api-key').value.trim();
         const model = document.getElementById('tutor-model').value;
-        if (!key.startsWith('sk-ant-')) {
-            alert('That does not look like an Anthropic API key (should start with sk-ant-).');
+        if (key.length < 20) {
+            alert('That does not look like a Gemini API key. Get a free one at aistudio.google.com/apikey');
             return;
         }
         this.apiKey = key;
         this.model = model;
-        localStorage.setItem('sysbreach_api_key', key);
+        localStorage.setItem('sysbreach_gemini_key', key);
         localStorage.setItem('sysbreach_ai_model', model);
         this.showChat();
     },
@@ -187,7 +188,6 @@ ${this.curriculumOutline()}`;
 
         this.addBubble('user', this.escapeHtml(text));
         this.messages.push({ role: 'user', content: text });
-        // Bound history to keep cost predictable
         if (this.messages.length > 24) {
             this.messages = this.messages.slice(-24);
             if (this.messages[0].role !== 'user') this.messages.shift();
@@ -202,32 +202,29 @@ ${this.curriculumOutline()}`;
             this.messages.push({ role: 'assistant', content: reply });
         } catch (err) {
             bubble.innerHTML = `<span class="tutor-error"><i class="fas fa-triangle-exclamation"></i> ${this.escapeHtml(err.message)}</span>`;
-            this.messages.pop(); // drop the failed user turn so retry is clean
+            this.messages.pop();
         } finally {
             this.busy = false;
             document.getElementById('tutor-send-btn').innerHTML = '<i class="fas fa-paper-plane"></i>';
         }
     },
 
+    geminiContents() {
+        return this.messages.map(m => ({
+            role: m.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: m.content }]
+        }));
+    },
+
     async streamCompletion(bubble) {
-        const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${this.model}:streamGenerateContent?alt=sse&key=${encodeURIComponent(this.apiKey)}`;
+        const resp = await fetch(url, {
             method: 'POST',
-            headers: {
-                'content-type': 'application/json',
-                'x-api-key': this.apiKey,
-                'anthropic-version': '2023-06-01',
-                'anthropic-dangerous-direct-browser-access': 'true'
-            },
+            headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
-                model: this.model,
-                max_tokens: 8192,
-                stream: true,
-                system: [{
-                    type: 'text',
-                    text: this.buildSystemPrompt(),
-                    cache_control: { type: 'ephemeral' }
-                }],
-                messages: this.messages
+                system_instruction: { parts: [{ text: this.buildSystemPrompt() }] },
+                contents: this.geminiContents(),
+                generationConfig: { maxOutputTokens: 8192, temperature: 0.7 }
             })
         });
 
@@ -236,9 +233,11 @@ ${this.curriculumOutline()}`;
             try {
                 const err = await resp.json();
                 msg = err.error && err.error.message ? err.error.message : msg;
-            } catch (_) { /* body not JSON */ }
-            if (resp.status === 401) msg = 'Invalid API key. Tap the gear icon to update it.';
-            if (resp.status === 429) msg = 'Rate limited — wait a moment and try again.';
+            } catch (_) { }
+            if (resp.status === 400 && /API key not valid/i.test(msg)) msg = 'Invalid API key. Tap the gear icon to update it.';
+            if (resp.status === 403) msg = 'API key rejected or Gemini API not enabled. Get a fresh key at aistudio.google.com/apikey';
+            if (resp.status === 429) msg = 'Free-tier rate limit hit — wait a minute and try again.';
+            if (resp.status === 404) msg = `Model "${this.model}" not available for this key. Try another model in settings (gear icon).`;
             throw new Error(msg);
         }
 
@@ -255,20 +254,26 @@ ${this.curriculumOutline()}`;
             buffer = lines.pop();
             for (const line of lines) {
                 if (!line.startsWith('data: ')) continue;
+                const payload = line.slice(6).trim();
+                if (!payload) continue;
                 let ev;
-                try { ev = JSON.parse(line.slice(6)); } catch (_) { continue; }
-                if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta') {
-                    fullText += ev.delta.text;
+                try { ev = JSON.parse(payload); } catch (_) { continue; }
+                if (ev.promptFeedback && ev.promptFeedback.blockReason) {
+                    throw new Error('Blocked by safety filter: ' + ev.promptFeedback.blockReason);
+                }
+                const cand = ev.candidates && ev.candidates[0];
+                if (cand && cand.content && cand.content.parts) {
+                    for (const part of cand.content.parts) {
+                        if (part.text) fullText += part.text;
+                    }
                     bubble.innerHTML = this.renderMarkdown(fullText) + '<span class="tutor-typing">▋</span>';
                     const box = document.getElementById('tutor-messages');
                     box.scrollTop = box.scrollHeight;
-                } else if (ev.type === 'error') {
-                    throw new Error(ev.error && ev.error.message ? ev.error.message : 'Stream error');
                 }
             }
         }
 
-        if (!fullText) throw new Error('Empty response — try again.');
+        if (!fullText) throw new Error('Empty response — try again, or switch models in settings.');
         bubble.innerHTML = this.renderMarkdown(fullText);
         return fullText;
     },
@@ -280,28 +285,20 @@ ${this.curriculumOutline()}`;
 
     renderMarkdown(text) {
         let s = this.escapeHtml(text);
-        // fenced code blocks
         s = s.replace(/```(\w*)\n([\s\S]*?)```/g, (m, lang, code) =>
             `<pre class="tutor-code">${code.replace(/\n$/, '')}</pre>`);
-        // inline code
         s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
-        // bold / italic
         s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
         s = s.replace(/(^|[^*])\*([^*\n]+)\*/g, '$1<em>$2</em>');
-        // headings → bold lines
         s = s.replace(/^#{1,4}\s+(.+)$/gm, '<strong class="tutor-h">$1</strong>');
-        // bullet lists
         s = s.replace(/^[-•]\s+(.+)$/gm, '<span class="tutor-li">• $1</span>');
         s = s.replace(/^\d+\.\s+(.+)$/gm, (m, t) => `<span class="tutor-li">${m.match(/^\d+/)[0]}. ${t}</span>`);
-        // newlines
         s = s.replace(/\n\n+/g, '<br><br>').replace(/\n/g, '<br>');
-        // don't double-break around block elements
         s = s.replace(/<br>(<pre)/g, '$1').replace(/(<\/pre>)<br>/g, '$1');
         return s;
     }
 };
 
-// Open tutor pre-loaded with a specific lesson's context (from "Ask AI" in lessons)
 function openTutorWithContext(dayNum) {
     showScreen('tutor');
     TUTOR.init();
