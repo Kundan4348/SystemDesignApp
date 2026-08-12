@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sysbreach-v6';
+const CACHE_NAME = 'sysbreach-v7';
 const ASSETS = [
     '/',
     '/index.html',
