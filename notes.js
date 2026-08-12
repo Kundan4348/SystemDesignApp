@@ -1,4 +1,4 @@
-// ============ NOTES — per-topic notes + save AI answers + export ============
+// ============ NOTES — per-topic notes + save AI answers + export/import ============
 // Self-contained: hooks into LessonExperience and TUTOR at runtime.
 // Storage: localStorage['sysbreach_notes'] = { "<dayNum|general>": [ {id,text,source,ts} ] }
 
@@ -159,7 +159,7 @@ const Notes = {
         if (day) this.refreshLessonPanel(day);
     },
 
-    // ---------- export / download ----------
+    // ---------- export: Markdown (for reading) ----------
     exportMarkdown() {
         const data = this._all();
         const keys = this.sortedKeys(data);
@@ -186,18 +186,89 @@ const Notes = {
     },
     download() {
         if (this.total() === 0) { alert('No notes to download yet.'); return; }
-        const md = this.exportMarkdown();
-        const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+        this._save(this.exportMarkdown(), 'md', 'text/markdown;charset=utf-8');
+    },
+
+    // ---------- backup / import: JSON (lossless, for device transfer) ----------
+    exportBackup() {
+        if (this.total() === 0) { alert('No notes to back up yet.'); return; }
+        const payload = { app: 'SysBreach', type: 'notes-backup', version: 1, exportedAt: new Date().toISOString(), notes: this._all() };
+        this._save(JSON.stringify(payload, null, 2), 'json', 'application/json', 'backup-');
+    },
+    importBackup() {
+        let input = document.getElementById('notes-import-input');
+        if (!input) {
+            input = document.createElement('input');
+            input.type = 'file';
+            input.id = 'notes-import-input';
+            input.accept = '.json,application/json';
+            input.style.display = 'none';
+            input.addEventListener('change', e => {
+                const file = e.target.files && e.target.files[0];
+                if (file) this._readImport(file);
+                input.value = '';
+            });
+            document.body.appendChild(input);
+        }
+        input.click();
+    },
+    _readImport(file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            try {
+                const parsed = JSON.parse(reader.result);
+                const incoming = (parsed && parsed.notes && typeof parsed.notes === 'object') ? parsed.notes : parsed;
+                if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) throw new Error('shape');
+                const res = this._merge(incoming);
+                alert('Import complete: ' + res.added + ' new note' + (res.added === 1 ? '' : 's') + ' added'
+                    + (res.skipped ? (', ' + res.skipped + ' already present (skipped)') : '') + '.');
+                this.openHub();
+                const c = document.getElementById('lesson-content');
+                if (c && c.querySelector('.notes-panel') && typeof LessonExperience !== 'undefined')
+                    this.refreshLessonPanel(LessonExperience.dayNum);
+            } catch (err) {
+                alert('Could not import that file. Pick a SysBreach notes backup (.json) exported from this app.');
+            }
+        };
+        reader.onerror = () => alert('Could not read the file.');
+        reader.readAsText(file);
+    },
+    _merge(incoming) {
+        const data = this._all();
+        let added = 0, skipped = 0;
+        Object.keys(incoming).forEach(k => {
+            const arr = incoming[k];
+            if (!Array.isArray(arr)) return;
+            if (!data[k]) data[k] = [];
+            const ids = new Set(data[k].map(n => n.id));
+            arr.forEach(n => {
+                if (!n || typeof n.text !== 'string' || !n.text.trim()) return;
+                if (n.id && ids.has(n.id)) { skipped++; return; }
+                const id = n.id || ('n' + Date.now() + Math.random().toString(36).slice(2, 6));
+                data[k].push({
+                    id: id,
+                    text: n.text,
+                    source: n.source === 'ai' ? 'ai' : 'manual',
+                    ts: typeof n.ts === 'number' ? n.ts : Date.now()
+                });
+                ids.add(id);
+                added++;
+            });
+            if (data[k].length === 0) delete data[k];
+        });
+        this._write(data);
+        return { added: added, skipped: skipped };
+    },
+
+    // shared file-saver
+    _save(text, ext, mime, prefix) {
+        const blob = new Blob([text], { type: mime });
         const url = URL.createObjectURL(blob);
-        const d = new Date();
-        const pad = x => String(x).padStart(2, '0');
-        const fname = 'sysbreach-notes-' + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '.md';
+        const d = new Date(); const pad = x => String(x).padStart(2, '0');
+        const fname = 'sysbreach-notes-' + (prefix || '') + d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + '.' + ext;
         const a = document.createElement('a');
-        a.href = url;
-        a.download = fname;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        a.href = url; a.download = fname;
+        document.body.appendChild(a); a.click(); document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(url), 1500);
     },
 
@@ -224,7 +295,7 @@ const Notes = {
         const keys = this.sortedKeys(data);
         let body;
         if (keys.length === 0) {
-            body = '<p class="notes-empty">No notes yet. Add notes from any lesson, or save an AI answer from the AI tab.</p>';
+            body = '<p class="notes-empty">No notes yet. Add notes from any lesson, save an AI answer from the AI tab, or Import a backup below.</p>';
         } else {
             body = keys.map(k => {
                 const meta = this.weekAndDay(k);
@@ -235,18 +306,19 @@ const Notes = {
                 </div>`;
             }).join('');
         }
-        const dlBtn = this.total() > 0
-            ? '<button class="notes-hub-dl" onclick="Notes.download()"><i class="fas fa-download"></i> Download</button>'
-            : '';
+        const tools = [];
+        if (this.total() > 0) {
+            tools.push('<button class="notes-tool-btn" onclick="Notes.download()"><i class="fas fa-file-lines"></i> Download .md</button>');
+            tools.push('<button class="notes-tool-btn" onclick="Notes.exportBackup()"><i class="fas fa-download"></i> Backup .json</button>');
+        }
+        tools.push('<button class="notes-tool-btn" onclick="Notes.importBackup()"><i class="fas fa-upload"></i> Import backup</button>');
         modal.innerHTML = `
             <div class="notes-hub-inner">
                 <div class="notes-hub-head">
                     <h3><i class="fas fa-book-bookmark"></i> MY NOTES <span class="notes-count">${this.total()}</span></h3>
-                    <div class="notes-hub-actions">
-                        ${dlBtn}
-                        <button class="notes-hub-close" onclick="Notes.closeHub()"><i class="fas fa-times"></i></button>
-                    </div>
+                    <button class="notes-hub-close" onclick="Notes.closeHub()"><i class="fas fa-times"></i></button>
                 </div>
+                <div class="notes-hub-toolbar">${tools.join('')}</div>
                 <div class="notes-hub-body">${body}</div>
             </div>`;
         modal.classList.add('open');
@@ -286,11 +358,11 @@ const Notes = {
         .notes-hub-inner{width:100%;max-width:560px;max-height:85vh;display:flex;flex-direction:column;background:var(--bg-secondary);border:1px solid var(--neon-purple);border-radius:16px;overflow:hidden;}
         .notes-hub-head{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.25rem;border-bottom:1px solid var(--border-color);}
         .notes-hub-head h3{font-family:var(--font-display);font-size:0.8rem;letter-spacing:1px;color:var(--neon-purple);}
-        .notes-hub-actions{display:flex;align-items:center;gap:0.5rem;}
-        .notes-hub-dl{background:rgba(0,255,65,0.1);border:1px solid var(--neon-green);color:var(--neon-green);border-radius:8px;padding:0.35rem 0.7rem;font-size:0.65rem;font-family:var(--font-mono);cursor:pointer;display:inline-flex;align-items:center;gap:0.3rem;}
-        .notes-hub-dl:hover{box-shadow:0 0 8px rgba(0,255,65,0.3);}
         .notes-hub-close{background:none;border:none;color:var(--text-secondary);font-size:1.1rem;cursor:pointer;}
         .notes-hub-close:hover{color:var(--neon-cyan);}
+        .notes-hub-toolbar{display:flex;flex-wrap:wrap;gap:0.5rem;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border-color);}
+        .notes-tool-btn{display:inline-flex;align-items:center;gap:0.35rem;background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-secondary);border-radius:8px;padding:0.4rem 0.7rem;font-size:0.65rem;font-family:var(--font-mono);cursor:pointer;}
+        .notes-tool-btn:hover{border-color:var(--neon-cyan);color:var(--neon-cyan);}
         .notes-hub-body{overflow-y:auto;padding:1rem 1.25rem;}
         .notes-hub-group{margin-bottom:1.25rem;}
         .notes-hub-group h4{font-size:0.75rem;color:var(--neon-cyan);margin-bottom:0.15rem;}
